@@ -19,10 +19,10 @@
 * By using this library you are implicitly assumed to have accepted all of the above statements,
 * and accept to cite the following papers:
 *
-* [1] C. Akinlar and C. Topal, “EDCircles: A Real-time Circle Detector with a False Detection Control,”
+* [1] C. Akinlar and C. Topal, ï¿½EDCircles: A Real-time Circle Detector with a False Detection Control,ï¿½
 *     Pattern Recognition, 46(3), 725-740, 2013.
 *
-* [2] C. Akinlar and C. Topal, “EDCircles: Realtime Circle Detection by Edge Drawing (ED),”
+* [2] C. Akinlar and C. Topal, ï¿½EDCircles: Realtime Circle Detection by Edge Drawing (ED),ï¿½
 *     IEEE Int'l Conf. on Acoustics,  Speech, and Signal Processing (ICASSP)}, March 2012.
 **************************************************************************************************************/
 
@@ -55,7 +55,7 @@
 
 enum ImageStyle{NONE=0, CIRCLES, ELLIPSES, BOTH};
 
-// Circle equation: (x-xc)^2 + (y-yc)^2 = r^2
+// EDCircle equation: (x-xc)^2 + (y-yc)^2 = r^2
 struct mCircle {
 	cv::Point2d center;
 	double r;
@@ -90,7 +90,7 @@ struct EllipseEquation {
 };
 
 // ================================ CIRCLES ================================
-struct Circle {
+struct EDCircle {
 	double xc, yc, r;        // Center (xc, yc) & radius.
 	double circleFitError;   // circle fit error
 	double coverRatio;       // Percentage of the circle covered by the arcs making up this circle [0-1]
@@ -122,11 +122,11 @@ struct MyArc {
 	int ex, ey;                 // End (x, y) coordinate of the arc
 
 	double *x, *y;              // Pointer to buffer containing the pixels making up this arc
-	int noPixels;               // # of pixels making up the arc    
+	int noPixels;               // # of pixels making up the arc
 
-	bool isEllipse;             // Did we fit an ellipse to this arc? 
+	bool isEllipse;             // Did we fit an ellipse to this arc?
 	EllipseEquation eq;         // If an ellipse, then the ellipse's equation
-	double ellipseFitError;     // Error during ellipse fit  
+	double ellipseFitError;     // Error during ellipse fit
 };
 
 // =============================== AngleSet ==================================
@@ -198,7 +198,7 @@ struct BufferManager {
 	~BufferManager() {
 		delete x;
 		delete y;
-	} //end-~BufferManager  
+	} //end-~BufferManager
 
 	double *getX() { return &x[index]; }
 	double *getY() { return &y[index]; }
@@ -231,9 +231,9 @@ private:
 	std::vector<mCircle> circles;
 	std::vector<mEllipse> ellipses;
 
-	Circle *circles1;
-	Circle *circles2;
-	Circle *circles3;
+	EDCircle *circles1;
+	EDCircle *circles2;
+	EDCircle *circles3;
 	int noCircles1;
 	int noCircles2;
 	int noCircles3;
@@ -255,15 +255,15 @@ private:
 	void JoinArcs1();
 	void JoinArcs2();
 	void JoinArcs3();
-	
+
 	// circle utility functions
-	static Circle *addCircle(Circle *circles, int &noCircles,double xc, double yc, double r, double circleFitError, double *x, double *y, int noPixels);
-	static Circle *addCircle(Circle *circles, int &noCircles,double xc, double yc, double r, double circleFitError, EllipseEquation *pEq, double ellipseFitError, double *x, double *y, int noPixels);
-	static void sortCircles(Circle *circles, int noCircles);
+	static EDCircle *addCircle(EDCircle *circles, int &noCircles,double xc, double yc, double r, double circleFitError, double *x, double *y, int noPixels);
+	static EDCircle *addCircle(EDCircle *circles, int &noCircles,double xc, double yc, double r, double circleFitError, EllipseEquation *pEq, double ellipseFitError, double *x, double *y, int noPixels);
+	static void sortCircles(EDCircle *circles, int noCircles);
 	static bool CircleFit(double *x, double *y, int N, double *pxc, double *pyc, double *pr, double *pe);
 	static void ComputeCirclePoints(double xc, double yc, double r, double *px, double *py, int *noPoints);
-	static void sortCircle(Circle *circles, int noCircles);
-	
+	static void sortCircle(EDCircle *circles, int noCircles);
+
 	// ellipse utility functions
 	static bool EllipseFit(double *x, double *y, int noPoints, EllipseEquation *pResult, int mode=FPF);
 	static double **AllocateMatrix(int noRows, int noColumns);
